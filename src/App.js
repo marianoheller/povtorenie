@@ -30,14 +30,17 @@ class App extends Component {
 
   handleSearch() {
     const { searchInput } = this.state;
-    axios.get(searchInput, {
-      baseURL: config.BASE_URL
+
+    if( !/[а-яА-ЯЁё]/.test(searchInput) ) return;
+
+    axios.post( config.REPEATER_URL, {
+      targetURL: config.BASE_URL + searchInput 
     })
     .then( (results) => {
-      console.log("RESULTS", results );
+      console.log("RESULTS", results.data );
     })
     .catch( (err) => {
-      console.log(err);
+      console.log("ERROR", err);
     })
   }
 
