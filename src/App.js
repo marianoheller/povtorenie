@@ -31,8 +31,7 @@ class App extends Component {
   handleSearch() {
     const { searchInput } = this.state;
     axios.get(searchInput, {
-      baseURL: config.BASE_URL,
-      crossdomain: true,
+      baseURL: config.BASE_URL
     })
     .then( (results) => {
       console.log("RESULTS", results );
