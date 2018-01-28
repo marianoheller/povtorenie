@@ -1,16 +1,12 @@
 import cheerio from 'cheerio';
-
+import cheerioTableparser from 'cheerio-tableparser';
 
 
 
 export default function scaper(data) {
-    const $ = cheerio.load(data);
+    let $ = cheerio.load(data);
+    $ = cheerio.load('<table id="target-table">' + $("table.inflection-ru").html() + '</table>')
 
-    return $("table.inflection-ru").find('tr').map( (i, tr) => {
-        return $(tr).children().map( (j,td) => {
-            let accContent = "";
-            $(td).children().each( (k,content) => accContent += $(content).html())
-            return accContent;
-        })
-    });
+    cheerioTableparser($);
+    return $("#target-table").parsetable(false, false, true);
 }

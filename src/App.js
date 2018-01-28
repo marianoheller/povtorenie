@@ -4,7 +4,10 @@ import axios from 'axios';
 import scraper from './modules/scraper';
 import parser from './modules/parser';
 
+import ContentDisplay from './components/ContentDisplay/ContentDisplay';
+
 import config from './config';
+import 'bulma/css/bulma.css'
 import './App.css';
 
 
@@ -14,10 +17,12 @@ class App extends Component {
     super(props);
 
     this.state = {
-      searchInput: ''
+      searchInput: '',
+      inflectionTable: []
     }
+
     this.handleInputChange = this.handleInputChange.bind(this);
-    this.handleSearch = debounce( this.handleSearch.bind(this), 750);
+    this.handleSearch = debounce( this.handleSearch.bind(this), 500);
   }
 
   handleInputChange(event) {
@@ -34,17 +39,18 @@ class App extends Component {
   handleSearch() {
     const { searchInput } = this.state;
 
-    //if( !/[а-яА-ЯЁё]/.test(searchInput) ) return;
+    if( !/[а-яА-ЯЁё]/.test(searchInput) ) return;
 
     axios.get( config.REPEATER_URL + config.BASE_URL + searchInput)
     .then( (results) => scraper(results.data))
-    .then( console.log )
+    .then( (newInflectionTable) => this.setState({ inflectionTable: newInflectionTable}) )
     .catch( (err) => {
       console.log("ERROR", err);
     })
   }
 
   render() {
+    const { inflectionTable } = this.state;
     return (
       <div className="App">
         <input
@@ -52,6 +58,9 @@ class App extends Component {
             type="text"
             value={this.state.searchInput}
             onChange={this.handleInputChange} />
+          <ContentDisplay 
+          inflectionTable={inflectionTable}
+          />
       </div>
     );
   }
