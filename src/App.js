@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 
+import scraper from './modules/scraper';
+import parser from './modules/parser';
+
 import config from './config';
 import './App.css';
 
@@ -31,14 +34,11 @@ class App extends Component {
   handleSearch() {
     const { searchInput } = this.state;
 
-    if( !/[а-яА-ЯЁё]/.test(searchInput) ) return;
+    //if( !/[а-яА-ЯЁё]/.test(searchInput) ) return;
 
-    axios.post( config.REPEATER_URL, {
-      targetURL: config.BASE_URL + searchInput 
-    })
-    .then( (results) => {
-      console.log("RESULTS", results.data );
-    })
+    axios.get( config.REPEATER_URL + config.BASE_URL + searchInput)
+    .then( (results) => scraper(results.data))
+    .then( console.log )
     .catch( (err) => {
       console.log("ERROR", err);
     })
