@@ -14,7 +14,8 @@ import WordList from './components/WordList/WordList';
 import SearchWord from './components/SearchWord/SearchWord';
 
 import config from './config';
-import 'bulma/css/bulma.css'
+import 'bulma/css/bulma.css';
+import 'font-awesome/css/font-awesome.css'
 import './App.css';
 
 
@@ -25,11 +26,12 @@ class App extends Component {
 
     this.state = {
       review: {
-        activeWord: "",
+        activeWord: null,
         inflectionTable: []
       },
       search: {
         searchInput: "",
+        isSearching: false,
         inflectionTable: []
       },
       list: {
@@ -44,6 +46,15 @@ class App extends Component {
     /* this.handleSearch = debounce( this.handleSearch.bind(this), 500); */
   }
 
+  componentDidMount() {
+    const { list, review } = this.state;
+    if( !list.words.length ) this.setState({ review: {...this.state.review, activeWord: null}});
+
+    const newActiveWord = list.words[ Math.floor(Math.random()*list.words.length) ];
+    this.setState({ review: {...this.state.review, activeWord: newActiveWord}});
+
+  }
+
   saveSearchInput(searchInput) {
     this.setState({
       search: {
@@ -54,8 +65,8 @@ class App extends Component {
   }
 
   handleSearch(searchInput) {
-
     if( !/[а-яА-ЯЁё]/.test(searchInput) ) return;
+    this.setState({search: {...this.state.search, isSearching: true}})
 
     axios.get( config.REPEATER_URL + config.BASE_URL + searchInput)
     //Get useful data
@@ -63,11 +74,15 @@ class App extends Component {
     //Transpose table
     .then( (inflectionTable) => inflectionTable[0].map((row, i) => inflectionTable.map(col => col[i])) )
     //Assign to state
-    .then( (newInflectionTable) => this.setState({ search: {
-      ...this.state.search,
-      inflectionTable: newInflectionTable
-    }}) )
+    .then( (newInflectionTable) => {
+      this.setState({ search: {
+        ...this.state.search,
+        isSearching: false,
+        inflectionTable: newInflectionTable
+      }});
+    })
     .catch( (err) => {
+      this.setState({search: {...this.state.search, isSearching: false}})
       console.log("ERROR", err);
     })
   }
