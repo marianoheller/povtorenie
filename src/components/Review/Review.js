@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import config from '../../config';
 
 
-export default class ContentDisplay extends Component {
+export default class Review extends Component {
 
     render() {
         let { inflectionTable } = this.props;
