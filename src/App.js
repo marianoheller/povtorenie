@@ -6,7 +6,7 @@ import {
 } from 'react-router-dom'
 
 import scraper from './modules/scraper';
-/* import parser from './modules/parser'; */
+import parser from './modules/parser';
 
 import Navbar from './components/Navbar/Navbar';
 import Review from './components/Review/Review';
@@ -28,11 +28,12 @@ class App extends Component {
     this.state = {
       review: {
         activeWord: null,
+        isLoading: false,
         inflectionTable: []
       },
       search: {
         searchInput: "",
-        isSearching: false,
+        isLoading: false,
         inflectionTable: []
       },
       list: {
@@ -42,35 +43,52 @@ class App extends Component {
     }
 
     this.saveSearchInput = this.saveSearchInput.bind(this);
-    this.handleSearch = this.handleSearch.bind(this);
+    this.getWordData = this.getWordData.bind(this);
     /* this.handleSearch = debounce( this.handleSearch.bind(this), 500); */
-
     this.getList = this.getList.bind(this);
+    this.assignActiveWord = this.assignActiveWord.bind(this);
+    this.assignRandomActiveWord = this.assignRandomActiveWord.bind(this);
   }
 
   componentDidMount() {
     this.getList();
   }
 
-  assignActiveWord() {
-    const { list, review } = this.state;
-    if(!list.words.length) return  this.setState({review: { ...this.state.review, activeWord: null }});
-
-    let newIndex = Math.floor(Math.random()*list.words.length);
-    if( list.words[newIndex]===review.activeWord ) newIndex = (newIndex+1)%list.words.length;
-
+  assignActiveWord(word) {
     this.setState({
       review: {
         ...this.state.review,
-        activeWord: list.words[newIndex]
+        activeWord: word
       }
     })
   }
 
+  assignRandomActiveWord(words) {
+    const { review } = this.state;
+    if(!words.length) return  this.setState({review: { ...this.state.review, activeWord: null }});
+
+    let newIndex = Math.floor(Math.random()*words.length);
+    if( words[newIndex]===review.activeWord ) newIndex = (newIndex+1)%words.length;
+
+    this.setState({
+      review: {
+        ...this.state.review,
+        activeWord: words[newIndex]
+      }
+    }, () => {
+      this.getWordData(words[newIndex], 'review')
+    } );
+    
+  }
+
   getList() {
+    const { review } = this.state;
+    const newWords = ["работать", "быть"];
+
     this.setState({ list: { ...this.state.list, isLoading: true }});
     setTimeout( () => {
-      this.setState({ list: { ...this.state.list, words: ["работать", "быть"], isLoading: false }});
+      this.setState({ list: { ...this.state.list, words: newWords, isLoading: false }});
+      if(!review.activeWord) this.assignRandomActiveWord(newWords);
     }, 2000)
   }
 
@@ -83,25 +101,25 @@ class App extends Component {
     })
   }
 
-  handleSearch(searchInput) {
-    if( !/[а-яА-ЯЁё]/.test(searchInput) ) return;
-    this.setState({search: {...this.state.search, isSearching: true}})
+  getWordData(word, dest) {
+    if( !/[а-яА-ЯЁё]/.test(word) ) return;
+    this.setState({ [dest]: {...this.state[dest], isLoading: true}})
 
-    axios.get( config.REPEATER_URL + config.BASE_URL + searchInput)
+    axios.get( config.REPEATER_URL + config.BASE_URL + word)
     //Get useful data
     .then( (results) => scraper(results.data))
     //Transpose table
-    .then( (inflectionTable) => inflectionTable[0].map((row, i) => inflectionTable.map(col => col[i])) )
+    .then( (inflectionTable) => parser(inflectionTable) )
     //Assign to state
     .then( (newInflectionTable) => {
-      this.setState({ search: {
-        ...this.state.search,
-        isSearching: false,
+      this.setState({ [dest]: {
+        ...this.state[dest],
+        isLoading: false,
         inflectionTable: newInflectionTable
       }});
     })
     .catch( (err) => {
-      this.setState({search: {...this.state.search, isSearching: false}})
+      this.setState({[dest]: {...this.state[dest], isLoading: false}})
       console.log("ERROR", err);
     })
   }
@@ -117,13 +135,20 @@ class App extends Component {
             <div className="columns">
               <div className="column is-8 is-offset-2">
                 <Route exact path="/" render={ (props) => 
-                  <Review {...review} getList={this.getList} {...props} /> 
+                  <Review 
+                  {...review}
+                  {...props}  
+                  list={list}
+                  getList={this.getList} 
+                  getWordData={this.getWordData} 
+                  assignRandomActiveWord={this.assignRandomActiveWord}
+                  /> 
                 }/>
                 <Route path="/list" render={ (props) => 
-                  <WordList {...list} getList={this.getList} {...props} /> 
+                  <WordList {...list} assignActiveWord={this.assignActiveWord} getList={this.getList} {...props} /> 
                 }/>
                 <Route path="/search" render={ (props) => 
-                  <SearchWord {...search} saveSearchInput={this.saveSearchInput} onSearch={this.handleSearch} {...props} /> 
+                  <SearchWord {...search} saveSearchInput={this.saveSearchInput} onSearch={this.getWordData} {...props} /> 
                 }/>
               </div>
             </div>

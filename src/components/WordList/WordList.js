@@ -9,6 +9,14 @@ export default class WordList extends Component {
         getList();
     }
 
+    handleWordClickFactory(word) {
+        const { assignActiveWord, history } = this.props;
+        return () => {
+            assignActiveWord(word);
+            history.push('/');
+        }
+    }
+
     render() {
         let { words } = this.props;
         const { isLoading } = this.props;
@@ -30,11 +38,10 @@ export default class WordList extends Component {
                 </thead>
                 <tbody>
                     { words.map( (word, i) => (
-                            <tr key={`word${i}`}>
-                                <td className="word-cell has-text-centered">{word}</td>
-                            </tr>
+                        <tr key={`word${i}`} onClick={this.handleWordClickFactory(word)}  className="table-word-row">
+                            <td className="word-cell has-text-centered">{word}</td>
+                        </tr>
                     ))}
-                        
                 </tbody>
             </table>
             <div id="add-word-button-container">

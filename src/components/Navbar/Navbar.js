@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom';
+import './Navbar.css';
 
 
 export default class NavBar extends Component {
@@ -8,9 +9,9 @@ export default class NavBar extends Component {
         return (
         <nav className="navbar" aria-label="main navigation">
             <div className="navbar-brand">
-                <a className="navbar-item" href="https://bulma.io">
+                {/* <a className="navbar-item" href="https://bulma.io">
                     <img src="https://bulma.io/images/bulma-logo.png" alt="Bulma: a modern CSS framework based on Flexbox" width="112" height="28" />
-                </a>
+                </a> */}
 
                 <button className="button navbar-burger">
                     <span></span>

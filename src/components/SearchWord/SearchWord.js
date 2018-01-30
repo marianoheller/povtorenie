@@ -33,17 +33,17 @@ export default class SearchWord extends Component {
     handleSearch() {
         const { searchInput } = this.state;
         const { onSearch } = this.props;
-        onSearch(searchInput);
+        onSearch(searchInput, 'search');
     }
 
     render() {
-        const { inflectionTable, isSearching } = this.props;
+        const { inflectionTable, isLoading } = this.props;
         const { searchInput } = this.state;
 
         return (
         <div id="search-word-container">
             <SearchInput 
-            isSearching={isSearching}
+            isLoading={isLoading}
             inputValue={searchInput}
             inputHandlers={{
                 handleInputKeyPress: this.handleInputKeyPress,
@@ -65,7 +65,7 @@ class SearchInput extends Component {
     }
 
     render() {
-        const { inputHandlers, isSearching, inputValue } = this.props;
+        const { inputHandlers, isLoading, inputValue } = this.props;
 
         return (
             <div id="search-input-container">
@@ -75,18 +75,18 @@ class SearchInput extends Component {
                         onKeyPress={inputHandlers.handleInputKeyPress}
                         onChange={inputHandlers.handleInputChange}
                         value={inputValue}
-                        disabled={!!isSearching}
+                        disabled={!!isLoading}
                         ref={(input) => { this.searchInput = input; }} 
                         name="searchInput" 
                         className="input is-hovered" 
                         type="text" 
                         placeholder="Type a word" />
                         <span className="icon is-small is-left">
-                            <i className={`fa fa-${ isSearching ? 'spinner fa-pulse' : 'search'}`}></i>
+                            <i className={`fa fa-${ isLoading ? 'spinner fa-pulse' : 'search'}`}></i>
                         </span>
                     </div>
                     <div className="control" onClick={inputHandlers.handleSearch}>
-                        <a className="button is-info" disabled={!!isSearching}>
+                        <a className="button is-info" disabled={!!isLoading}>
                             Поиск
                         </a>
                     </div>
