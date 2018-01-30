@@ -8,5 +8,5 @@ export default function scaper(data) {
     $ = cheerio.load('<table id="target-table">' + $("table.inflection-ru").html() + '</table>')
 
     cheerioTableparser($);
-    return $("#target-table").parsetable(false, false, true);
+    return $("#target-table").parsetable(true, true, true);
 }

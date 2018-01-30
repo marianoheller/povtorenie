@@ -83,7 +83,7 @@ class App extends Component {
 
   getList() {
     const { review } = this.state;
-    const newWords = ["работать", "быть"];
+    const newWords = ["работать", "быть", "бежать"];
 
     this.setState({ list: { ...this.state.list, isLoading: true }});
     setTimeout( () => {

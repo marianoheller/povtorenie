@@ -11,5 +11,9 @@ export default {
         "singular", "plural",
         "present","past","future", "imperative",
         "masculine", "feminine", "neuter"
+    ],
+    DARK_ROW_KEY_WORDS: [
+        "imperfective aspect", "perfective aspect", "participles",
+        "imperative", "past tense", "present tense"
     ]
 }
