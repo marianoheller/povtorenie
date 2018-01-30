@@ -14,18 +14,15 @@ export default class WordInfo extends Component {
             <table className="table is-bordered is-narrow is-striped" id="inflection-table">
                 <tbody>
                 { inflectionTable.map( (row, rowNum) => (
-                    <tr key={rowNum}>
-                        {row.map( (cell, cellNum) => (
-                            <td key={cellNum}>
-                                { config.BOLD_KEY_WORDS.some( (keyWord) => cell.indexOf(keyWord) !== -1) ?
-                                <b>{cell}</b>
-                                :
-                                cell
-                                }
-                                
-                            </td>
-                        ))}
-                    </tr>
+                <tr key={rowNum}>
+                    {row.map( (cell, cellNum) => (
+                    <td key={cellNum}>
+                        { config.BOLD_KEY_WORDS.some( (keyWord) => cell.indexOf(keyWord) !== -1) ?
+                        <b>{cell}</b> : cell }
+                        
+                    </td>
+                    ))}
+                </tr>
                 ))}
                 </tbody>
             </table>

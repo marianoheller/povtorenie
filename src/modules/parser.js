@@ -8,7 +8,6 @@ export default function parser(inflectionTable) {
         const cellChars = cell.trim().split('');
         if( !cellChars.length || !/[а-яА-ЯЁё]/.test(cellChars[0]) ) return cell;
         
-        //return words.filter( (word) => /[а-яА-ЯЁё]/.test(word) ).join(" ");
         return cellChars.filter( (c) =>  /[а-яА-ЯЁё,-\s]/.test(c)).join('')
     }));
 
