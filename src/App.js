@@ -6,7 +6,7 @@ import {
 } from 'react-router-dom'
 
 import scraper from './modules/scraper';
-import parser from './modules/parser';
+/* import parser from './modules/parser'; */
 
 import Navbar from './components/Navbar/Navbar';
 import Review from './components/Review/Review';
@@ -17,6 +17,7 @@ import config from './config';
 import 'bulma/css/bulma.css';
 import 'font-awesome/css/font-awesome.css'
 import './App.css';
+import { setTimeout } from 'timers';
 
 
 class App extends Component {
@@ -35,24 +36,42 @@ class App extends Component {
         inflectionTable: []
       },
       list: {
-        words: [
-          "работать", "быть"
-        ]
+        isLoading: false,
+        words: null
       }
     }
 
     this.saveSearchInput = this.saveSearchInput.bind(this);
     this.handleSearch = this.handleSearch.bind(this);
     /* this.handleSearch = debounce( this.handleSearch.bind(this), 500); */
+
+    this.getList = this.getList.bind(this);
   }
 
   componentDidMount() {
+    this.getList();
+  }
+
+  assignActiveWord() {
     const { list, review } = this.state;
-    if( !list.words.length ) this.setState({ review: {...this.state.review, activeWord: null}});
+    if(!list.words.length) return  this.setState({review: { ...this.state.review, activeWord: null }});
 
-    const newActiveWord = list.words[ Math.floor(Math.random()*list.words.length) ];
-    this.setState({ review: {...this.state.review, activeWord: newActiveWord}});
+    let newIndex = Math.floor(Math.random()*list.words.length);
+    if( list.words[newIndex]===review.activeWord ) newIndex = (newIndex+1)%list.words.length;
 
+    this.setState({
+      review: {
+        ...this.state.review,
+        activeWord: list.words[newIndex]
+      }
+    })
+  }
+
+  getList() {
+    this.setState({ list: { ...this.state.list, isLoading: true }});
+    setTimeout( () => {
+      this.setState({ list: { ...this.state.list, words: ["работать", "быть"], isLoading: false }});
+    }, 2000)
   }
 
   saveSearchInput(searchInput) {
@@ -88,7 +107,7 @@ class App extends Component {
   }
 
   render() {
-    const { list, search } = this.state;
+    const { list, search, review } = this.state;
     return (
       <div className="App">
         <Router>
@@ -97,8 +116,12 @@ class App extends Component {
 
             <div className="columns">
               <div className="column is-8 is-offset-2">
-                <Route exact path="/" component={Review}/>
-                <Route path="/list" render={ (props) => <WordList {...list} {...props} /> }/>
+                <Route exact path="/" render={ (props) => 
+                  <Review {...review} getList={this.getList} {...props} /> 
+                }/>
+                <Route path="/list" render={ (props) => 
+                  <WordList {...list} getList={this.getList} {...props} /> 
+                }/>
                 <Route path="/search" render={ (props) => 
                   <SearchWord {...search} saveSearchInput={this.saveSearchInput} onSearch={this.handleSearch} {...props} /> 
                 }/>

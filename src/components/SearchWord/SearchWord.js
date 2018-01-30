@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import config from '../../config';
+import WordInfo from '../WordInfo/WordInfo';
 import './SearchWord.css';
 
 export default class SearchWord extends Component {
@@ -12,6 +12,8 @@ export default class SearchWord extends Component {
         }
 
         this.handleInputChange = this.handleInputChange.bind(this);
+        this.handleInputKeyPress = this.handleInputKeyPress.bind(this);
+        this.handleSearch = this.handleSearch.bind(this);
     }
 
     componentWillUnmount() {
@@ -31,24 +33,50 @@ export default class SearchWord extends Component {
     handleSearch() {
         const { searchInput } = this.state;
         const { onSearch } = this.props;
-        console.log("SEARCHING: ", searchInput);
         onSearch(searchInput);
     }
 
     render() {
         const { inflectionTable, isSearching } = this.props;
-        if(!inflectionTable) return <div>Error! No inflection table prop</div>;
+        const { searchInput } = this.state;
 
         return (
         <div id="search-word-container">
+            <SearchInput 
+            isSearching={isSearching}
+            inputValue={searchInput}
+            inputHandlers={{
+                handleInputKeyPress: this.handleInputKeyPress,
+                handleInputChange: this.handleInputChange,
+                handleSearch: this.handleSearch
+            }} />
+            <WordInfo inflectionTable={inflectionTable} />
+        </div>
+        )
+    }
+}
+
+
+
+class SearchInput extends Component {
+
+    componentDidMount(){
+        this.searchInput.focus();
+    }
+
+    render() {
+        const { inputHandlers, isSearching, inputValue } = this.props;
+
+        return (
             <div id="search-input-container">
                 <div className="field has-addons">
                     <div className="control has-icons-left is-expanded">
                         <input
-                        onKeyPress={this.handleInputKeyPress.bind(this)}
-                        onChange={this.handleInputChange}
-                        value={this.state.searchInput}
+                        onKeyPress={inputHandlers.handleInputKeyPress}
+                        onChange={inputHandlers.handleInputChange}
+                        value={inputValue}
                         disabled={!!isSearching}
+                        ref={(input) => { this.searchInput = input; }} 
                         name="searchInput" 
                         className="input is-hovered" 
                         type="text" 
@@ -57,34 +85,13 @@ export default class SearchWord extends Component {
                             <i className={`fa fa-${ isSearching ? 'spinner fa-pulse' : 'search'}`}></i>
                         </span>
                     </div>
-                    <div className="control" onClick={this.handleSearch.bind(this)}>
+                    <div className="control" onClick={inputHandlers.handleSearch}>
                         <a className="button is-info" disabled={!!isSearching}>
-                            Search
+                            Поиск
                         </a>
                     </div>
                 </div>
             </div>
-            <div id="search-results-container">
-                <table className="table is-bordered is-narrow is-striped" id="inflection-table">
-                    <tbody>
-                    { inflectionTable.map( (row, rowNum) => (
-                        <tr key={rowNum}>
-                            {row.map( (cell, cellNum) => (
-                                <td key={cellNum}>
-                                    { config.BOLD_KEY_WORDS.some( (keyWord) => cell.indexOf(keyWord) !== -1) ?
-                                    <b>{cell}</b>
-                                    :
-                                    cell
-                                    }
-                                    
-                                </td>
-                            ))}
-                        </tr>
-                    ))}
-                    </tbody>
-                </table>
-            </div>
-        </div>
         )
     }
 }

@@ -21,9 +21,9 @@ export default class NavBar extends Component {
 
             <div className="navbar-menu">
                 <div className="navbar-start">
-                    <NavLink className="navbar-item" to="/list" >My list</NavLink>
-                    <NavLink className="navbar-item" to="/" >Review!</NavLink>
-                    <NavLink className="navbar-item" to="/search" >Search word</NavLink>
+                    <NavLink className="navbar-item" to="/list" >Мой словарь</NavLink>
+                    <NavLink className="navbar-item" to="/" >Practice!</NavLink>
+                    <NavLink className="navbar-item" to="/search" >Поиск слова</NavLink>
                 </div>
 
                 <div className="navbar-end">

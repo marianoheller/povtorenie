@@ -1,0 +1,4 @@
+.word-cell {
+    cursor: pointer;
+    user-select: none;
+}
