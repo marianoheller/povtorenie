@@ -12,12 +12,12 @@ import Navbar from './components/Navbar/Navbar';
 import Review from './components/Review/Review';
 import WordList from './components/WordList/WordList';
 import SearchWord from './components/SearchWord/SearchWord';
+import Login from './components/Login/Login';
 
 import config from './config';
 import 'bulma/css/bulma.css';
 import 'font-awesome/css/font-awesome.css'
 import './App.css';
-import { setTimeout } from 'timers';
 
 
 class App extends Component {
@@ -26,6 +26,9 @@ class App extends Component {
     super(props);
 
     this.state = {
+      profile: {
+        displayName: null
+      },
       review: {
         activeWord: null,
         isLoading: false,
@@ -48,6 +51,8 @@ class App extends Component {
     this.getList = this.getList.bind(this);
     this.assignActiveWord = this.assignActiveWord.bind(this);
     this.assignRandomActiveWord = this.assignRandomActiveWord.bind(this);
+    this.handleLogin = this.handleLogin.bind(this);
+    this.handleRegister = this.handleRegister.bind(this);
   }
 
   componentDidMount() {
@@ -63,8 +68,9 @@ class App extends Component {
     })
   }
 
-  assignRandomActiveWord(words) {
-    const { review } = this.state;
+  assignRandomActiveWord() {
+    const { review, list } = this.state;
+    const { words } = list;
     if(!words.length) return  this.setState({review: { ...this.state.review, activeWord: null }});
 
     let newIndex = Math.floor(Math.random()*words.length);
@@ -82,14 +88,19 @@ class App extends Component {
   }
 
   getList() {
-    const { review } = this.state;
-    const newWords = ["работать", "быть", "бежать"];
+    //const newWords = ["работать", "быть", "бежать"];
 
     this.setState({ list: { ...this.state.list, isLoading: true }});
-    setTimeout( () => {
-      this.setState({ list: { ...this.state.list, words: newWords, isLoading: false }});
-      if(!review.activeWord) this.assignRandomActiveWord(newWords);
-    }, 2000)
+    axios.get(config.BACKEND_URL + 'auth/profile')
+    .then( (results) => {
+      this.setState({ list: { ...this.state.list, words: results.data.words, isLoading: false }}, () => {
+        this.assignRandomActiveWord();
+      });
+    })
+    .catch((err) => {
+      this.setState({ list: { ...this.state.list, isLoading: false }});
+      console.log(err);
+    })
   }
 
   saveSearchInput(searchInput) {
@@ -124,13 +135,51 @@ class App extends Component {
     })
   }
 
+  handleLogin(username, password) {
+    axios.post(config.BACKEND_URL + "auth/login", {
+      username: username,
+      password: password
+    })
+    .then( (results) => {
+      this.setState({
+        profile: {
+          ...this.state.profile,
+          displayName: results.data.displayName
+        }
+      })
+    })
+    .catch( (err) => {
+      console.log(err);
+    })
+  }
+
+
+  handleRegister(username, password, displayName) {
+    axios.post(config.BACKEND_URL + "auth/register", {
+      username: username,
+      displayName: displayName || username,
+      password: password
+    })
+    .then( (results) => {
+      this.setState({
+        profile: {
+          ...this.state.profile,
+          displayName: results.data.displayName
+        }
+      })
+    })
+    .catch( (err) => {
+      console.log(err);
+    })
+  }
+
   render() {
-    const { list, search, review } = this.state;
+    const { list, search, review, profile } = this.state;
     return (
       <div className="App">
         <Router>
           <div>
-            <Navbar />
+            <Navbar {...profile} />
 
             <div className="columns">
               <div className="column is-8 is-offset-2">
@@ -149,6 +198,9 @@ class App extends Component {
                 }/>
                 <Route path="/search" render={ (props) => 
                   <SearchWord {...search} saveSearchInput={this.saveSearchInput} onSearch={this.getWordData} {...props} /> 
+                }/>
+                <Route path="/login" render={ (props) => 
+                  <Login handleLogin={this.handleLogin} handleRegister={this.handleRegister} {...profile} {...props} /> 
                 }/>
               </div>
             </div>

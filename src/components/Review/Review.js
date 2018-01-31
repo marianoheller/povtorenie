@@ -12,8 +12,8 @@ export default class Review extends Component {
     }
 
     handleGetWordClick() {
-        const { list, assignRandomActiveWord } = this.props;
-        assignRandomActiveWord(list.words);
+        const { assignRandomActiveWord } = this.props;
+        assignRandomActiveWord();
     }
 
     render() {
@@ -31,7 +31,11 @@ export default class Review extends Component {
                 </div>
                 <div id="review-active-word">
                     <p>Current word:{" "} 
-                        <strong>{ activeWord || <i className="fa fa-spinner fa-pulse fa-fw"></i>}</strong>
+                        <strong>{ activeWord }</strong>
+                        { (!activeWord && !list.isLoading) ||
+                        <i className="fa fa-spinner fa-pulse fa-fw"></i>
+                        }
+                        
                     </p>
                 </div>
                 <ReviewStatusInformer 

@@ -6,6 +6,8 @@ import './Navbar.css';
 export default class NavBar extends Component {
 
     render() {
+        const { displayName } = this.props;
+
         return (
         <nav className="navbar" aria-label="main navigation">
             <div className="navbar-brand">
@@ -28,6 +30,12 @@ export default class NavBar extends Component {
                 </div>
 
                 <div className="navbar-end">
+                    {   displayName ?
+                    <NavLink className="navbar-item" to="/logout" >{displayName}, logout</NavLink>
+                    :
+                    <NavLink className="navbar-item" to="/login" >Login</NavLink>
+                    }
+                    
                 </div>
             </div>
         </nav>
