@@ -11,9 +11,9 @@ export default class NavBar extends Component {
         return (
         <nav className="navbar" aria-label="main navigation">
             <div className="navbar-brand">
-                {/* <a className="navbar-item" href="https://bulma.io">
+                <a className="navbar-item" href="https://bulma.io">
                     <img src="https://bulma.io/images/bulma-logo.png" alt="Bulma: a modern CSS framework based on Flexbox" width="112" height="28" />
-                </a> */}
+                </a>
 
                 <button className="button navbar-burger">
                     <span></span>
@@ -24,16 +24,28 @@ export default class NavBar extends Component {
 
             <div className="navbar-menu">
                 <div className="navbar-start">
-                    <NavLink className="navbar-item" to="/list" >Мой словарь</NavLink>
-                    <NavLink className="navbar-item" to="/" >Practice!</NavLink>
-                    <NavLink className="navbar-item" to="/search" >Поиск слова</NavLink>
+                    <NavLink className="navbar-item" activeClassName="is-active" to="/" >
+                        <i className="fa fa-gavel fa-fw"></i>
+                        Practice!
+                    </NavLink>
+                    <NavLink className="navbar-item" activeClassName="is-active" to="/list" >
+                        <i className="fa fa-book fa-fw"></i>
+                        Мой словарь
+                    </NavLink>
+                    <NavLink className="navbar-item" activeClassName="is-active" to="/search" >
+                        <i className="fa fa-search fa-fw"></i>
+                        Поиск слова
+                    </NavLink>
                 </div>
 
                 <div className="navbar-end">
                     {   displayName ?
                     <NavLink className="navbar-item" to="/logout" >{displayName}, logout</NavLink>
                     :
-                    <NavLink className="navbar-item" to="/login" >Login</NavLink>
+                    <NavLink className="navbar-item" activeClassName="is-active" to="/login" >
+                        <i className="fa fa-sign-in fa-fw"></i>
+                        Login
+                    </NavLink>
                     }
                     
                 </div>

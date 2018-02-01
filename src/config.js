@@ -16,5 +16,7 @@ export default {
     DARK_ROW_KEY_WORDS: [
         "imperfective aspect", "perfective aspect", "participles",
         "imperative", "past tense", "present tense"
-    ]
+    ],
+
+    DEFAULT_WORD_LIST: [ "работать", "поработать", "быть", "бежать"],
 }

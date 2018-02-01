@@ -44,7 +44,7 @@ class App extends Component {
       list: {
         isDefault: true,
         isLoading: false,
-        words: [ "работать", "поработать", "быть", "бежать"]
+        words: config.DEFAULT_WORD_LIST
       }
     }
 
@@ -59,10 +59,42 @@ class App extends Component {
     this.handleLogout = this.handleLogout.bind(this);
     this.handleAddWord = this.handleAddWord.bind(this);
     this.syncWords = this.syncWords.bind(this);
+    this.resetState = this.resetState.bind(this);
   }
 
   componentDidMount() {
     this.syncWords();
+  }
+
+  resetState(cb) {
+    this.setState({
+      ...this.state,
+      profile: {
+        ...this.state.profile,
+        isLoading: false,
+        displayName: null
+      },
+      review: {
+        ...this.state.review,
+        activeWord: null,
+        isLoading: false,
+        inflectionTable: []
+      },
+      search: {
+        ...this.state.search,
+        searchInput: "",
+        isLoading: false,
+        inflectionTable: []
+      },
+      list: {
+        ...this.state.list,
+        isDefault: true,
+        isLoading: false,
+        words: config.DEFAULT_WORD_LIST
+      }
+    }, () => {
+      if(cb) cb();
+    })
   }
 
   assignActiveWord(word) {
@@ -159,6 +191,8 @@ class App extends Component {
           isLoading: false,
           displayName: results.data.displayName
         }
+      }, () => {
+        this.syncWords();
       })
     })
     .catch( (err) => {
@@ -187,7 +221,7 @@ class App extends Component {
           displayName: results.data.displayName,
           isLoading: false
         }
-      })
+      }, () => this.syncWords())
     })
     .catch( (err) => {
       console.log(err);
@@ -200,9 +234,9 @@ class App extends Component {
   handleLogout() {
     axios.get(config.BACKEND_URL + "auth/logout", {withCredentials: true})
     .then( (results) => {
-      this.setState({
-        profile: { ...this.state.profile, displayName: null }
-      })
+      this.resetState( () => {
+        this.syncWords();
+      } );
     })
     .catch( (err) => {
       console.log(err);
@@ -242,7 +276,7 @@ class App extends Component {
           <div>
             <Navbar {...profile} />
 
-            <div className="columns">
+            <div className="columns" id="app-content-container">
               <div className="column is-8 is-offset-2">
                 <Route exact path="/" render={ (props) => 
                   <Review 
