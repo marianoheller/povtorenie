@@ -5,11 +5,26 @@ import './Review.css';
 
 export default class Review extends Component {
 
+    _handleKKey(event){
+        if(event.keyCode===75) {
+            this.handleGetWordClick();
+        }
+    }
+
+    componentWillMount(){
+        document.addEventListener("keydown", this._handleKKey.bind(this), false);
+    }
+
+
+    componentWillUnmount() {
+        document.removeEventListener("keydown", this._handleKKey.bind(this), false);
+    }
+
     componentDidMount() {
         const { activeWord, getWordData } = this.props;
         if(!activeWord) return;
         getWordData(activeWord, 'review');
-    }
+    }    
 
     handleGetWordClick() {
         const { assignRandomActiveWord } = this.props;
@@ -32,7 +47,7 @@ export default class Review extends Component {
                 <div id="review-active-word">
                     <p>Current word:{" "} 
                         <strong>{ activeWord }</strong>
-                        { (!activeWord && !list.isLoading) ||
+                        { (!activeWord && !list.isLoading && !isLoading) &&
                         <i className="fa fa-spinner fa-pulse fa-fw"></i>
                         }
                         

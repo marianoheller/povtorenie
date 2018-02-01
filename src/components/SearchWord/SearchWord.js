@@ -43,7 +43,7 @@ export default class SearchWord extends Component {
     }
 
     render() {
-        const { inflectionTable, isLoading, searchInput: currentSearch } = this.props;
+        const { inflectionTable, isLoading, searchInput: currentSearch, list } = this.props;
         const { searchInput } = this.state;
 
         return (
@@ -59,6 +59,7 @@ export default class SearchWord extends Component {
             <AddButton 
             handleAddWord={this.handleAddWord.bind(this)}
             isLoading={isLoading}
+            isAlreadyListed={!!list.words.find( (word) => word===currentSearch )}
             showing={!!inflectionTable.length}/>
             <WordInfo currentSearch={currentSearch} inflectionTable={inflectionTable} />
         </div>
@@ -68,15 +69,16 @@ export default class SearchWord extends Component {
 
 class AddButton extends Component {
     render() {
-        const { showing, handleAddWord, isLoading } = this.props;
+        const { showing, handleAddWord, isLoading, isAlreadyListed } = this.props;
         if(!showing) return null;
 
         return (
             <div id="add-button-container" className="columns">
                 <div className="column is-half is-offset-one-quarter has-text-centered">
                     <button 
-                    disabled={isLoading}
+                    disabled={isLoading || isAlreadyListed}
                     className="button is-success" 
+                    title={ isAlreadyListed ? "Word already exists in list": "Add word"}
                     onClick={handleAddWord}
                     >Add this word</button>
                 </div>

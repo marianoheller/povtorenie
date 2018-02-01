@@ -1,10 +1,22 @@
-.word-cell {
+.table-word-cell {
     cursor: pointer;
     user-select: none;
 }
 
-
-
 .table-word-row:hover {
     background-color: #f5f5f5 !important;
+}
+
+.delete-button {
+    height: 100%;
+    display: flex;
+}
+
+.visible-on-hover {
+    display: none ;
+}
+
+
+.table-word-cell:hover > .visible-on-hover {
+    display: flex !important;
 }

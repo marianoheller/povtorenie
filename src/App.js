@@ -42,8 +42,9 @@ class App extends Component {
         inflectionTable: []
       },
       list: {
+        isDefault: true,
         isLoading: false,
-        words: []
+        words: [ "работать", "поработать", "быть", "бежать"]
       }
     }
 
@@ -57,10 +58,11 @@ class App extends Component {
     this.handleRegister = this.handleRegister.bind(this);
     this.handleLogout = this.handleLogout.bind(this);
     this.handleAddWord = this.handleAddWord.bind(this);
+    this.syncWords = this.syncWords.bind(this);
   }
 
   componentDidMount() {
-    this.getList();
+    this.syncWords();
   }
 
   assignActiveWord(word) {
@@ -95,14 +97,16 @@ class App extends Component {
     //const newWords = ["работать", "быть", "бежать"];
 
     this.setState({ list: { ...this.state.list, isLoading: true }});
-    axios.get(config.BACKEND_URL + 'auth/profile')
+    axios.get(config.BACKEND_URL + 'auth/profile', {withCredentials: true})
     .then( (results) => {
       this.setState({ list: { ...this.state.list, words: results.data.words, isLoading: false }}, () => {
         this.assignRandomActiveWord();
       });
     })
     .catch((err) => {
-      this.setState({ list: { ...this.state.list, isLoading: false }});
+      this.setState({ list: { ...this.state.list, isLoading: false }}, () => {
+        this.assignRandomActiveWord();
+      });
       console.log(err);
     })
   }
@@ -147,7 +151,7 @@ class App extends Component {
     axios.post(config.BACKEND_URL + "auth/login", {
       username: username,
       password: password
-    })
+    },{withCredentials: true})
     .then( (results) => {
       this.setState({
         profile: {
@@ -175,7 +179,7 @@ class App extends Component {
       username: username,
       displayName: displayName || username,
       password: password
-    })
+    }, {withCredentials: true})
     .then( (results) => {
       this.setState({
         profile: {
@@ -194,7 +198,7 @@ class App extends Component {
   }
 
   handleLogout() {
-    axios.get(config.BACKEND_URL + "auth/logout")
+    axios.get(config.BACKEND_URL + "auth/logout", {withCredentials: true})
     .then( (results) => {
       this.setState({
         profile: { ...this.state.profile, displayName: null }
@@ -209,20 +213,24 @@ class App extends Component {
     const { list } = this.state;
     if( list.words.find( (wordElement) => wordElement===word) ) return;
     const newWords = [ ...list.words, word]
-    this.setState({ list: {...list, words: newWords} }, () => this.syncWords() );
+    this.setState({ list: {...list, isDefault: false, words: newWords} }, () => this.syncWords() );
   }
 
   syncWords() {
-    const { list } = this.state;
+    //HAY QUE VER EL TEMA SI ES DEFAULT LA LISTA
 
     axios.post(config.BACKEND_URL + "words/sync", {
-      words: list.words
-    })
+      words: this.state.list.words
+    }, {withCredentials: true})
     .then( (results) => {
+      this.setState({ list: {...this.state.list, isDefault: false, words: results.data.words} }, () => {
+        this.assignRandomActiveWord();
+      } );
       console.log("Wordlist sync'ed");
     })
     .catch( (err) => {
       console.log("Unable to sync wordlist", err);
+      this.assignRandomActiveWord();
     })
   }
 
@@ -247,10 +255,11 @@ class App extends Component {
                   /> 
                 }/>
                 <Route path="/list" render={ (props) => 
-                  <WordList {...list} assignActiveWord={this.assignActiveWord} getList={this.getList} {...props} /> 
+                  <WordList {...list} assignActiveWord={this.assignActiveWord} syncWords={this.syncWords} {...props} /> 
                 }/>
                 <Route path="/search" render={ (props) => 
                   <SearchWord {...search}  {...props}
+                  list={list}
                   saveSearchInput={this.saveSearchInput} 
                   handleAddWord={this.handleAddWord}
                   onSearch={this.getWordData} /> 

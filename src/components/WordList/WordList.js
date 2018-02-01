@@ -5,8 +5,8 @@ import './WordList.css';
 export default class WordList extends Component {
 
     componentDidMount() {
-        const { getList } = this.props;
-        getList();
+        const { syncWords } = this.props;
+        syncWords();
     }
 
     handleWordClickFactory(word) {
@@ -39,7 +39,10 @@ export default class WordList extends Component {
                 <tbody>
                     { words.map( (word, i) => (
                         <tr key={`word${i}`} onClick={this.handleWordClickFactory(word)}  className="table-word-row">
-                            <td className="word-cell has-text-centered">{word}</td>
+                            <td className="table-word-cell has-text-centered">
+                                {word}
+                                <i className="fa fa-trash is-pulled-right delete-button visible-on-hover"></i>
+                            </td>
                         </tr>
                     ))}
                 </tbody>

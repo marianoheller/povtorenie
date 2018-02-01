@@ -31,6 +31,10 @@ class LoginForm extends Component {
         this.handleInputChange = this.handleInputChange.bind(this);
     }
 
+    componentDidMount() {
+        this.userInput.focus();
+    }
+
     handleSubmit(e) {
         e.preventDefault();
         const { username, password } = this.state;
@@ -68,6 +72,7 @@ class LoginForm extends Component {
                             className="input" 
                             name="username"
                             autoComplete="off"
+                            ref={(input) => { this.userInput = input; }} 
                             type="text" 
                             value={username}
                             onChange={this.handleInputChange}
