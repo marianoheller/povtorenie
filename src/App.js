@@ -238,7 +238,7 @@ class App extends Component {
     const { list, search, review, profile } = this.state;
     return (
       <div className="App">
-        <Router>
+        <Router basename="/povtorenie">
           <div>
             <Navbar {...profile} />
 
@@ -270,7 +270,7 @@ class App extends Component {
                 <Route path="/logout" render={ (props) => {
                   this.handleLogout();
                   return <Redirect to="/" />
-                }                
+                }
                 }/>
               </div>
             </div>
