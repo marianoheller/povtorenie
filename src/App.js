@@ -18,6 +18,7 @@ import config from './config';
 import 'bulma/css/bulma.css';
 import 'font-awesome/css/font-awesome.css'
 import './App.css';
+import Redirect from 'react-router-dom/Redirect';
 
 
 class App extends Component {
@@ -27,6 +28,7 @@ class App extends Component {
 
     this.state = {
       profile: {
+        isLoading: false,
         displayName: null
       },
       review: {
@@ -41,7 +43,7 @@ class App extends Component {
       },
       list: {
         isLoading: false,
-        words: null
+        words: []
       }
     }
 
@@ -53,6 +55,8 @@ class App extends Component {
     this.assignRandomActiveWord = this.assignRandomActiveWord.bind(this);
     this.handleLogin = this.handleLogin.bind(this);
     this.handleRegister = this.handleRegister.bind(this);
+    this.handleLogout = this.handleLogout.bind(this);
+    this.handleAddWord = this.handleAddWord.bind(this);
   }
 
   componentDidMount() {
@@ -136,6 +140,10 @@ class App extends Component {
   }
 
   handleLogin(username, password) {
+    this.setState({
+      profile: { ...this.state.profile, isLoading: true }
+    })
+
     axios.post(config.BACKEND_URL + "auth/login", {
       username: username,
       password: password
@@ -144,17 +152,25 @@ class App extends Component {
       this.setState({
         profile: {
           ...this.state.profile,
+          isLoading: false,
           displayName: results.data.displayName
         }
       })
     })
     .catch( (err) => {
       console.log(err);
+      this.setState({
+        profile: { ...this.state.profile, isLoading: false }
+      })
     })
   }
 
 
   handleRegister(username, password, displayName) {
+    this.setState({
+      profile: { ...this.state.profile, isLoading: true }
+    })
+
     axios.post(config.BACKEND_URL + "auth/register", {
       username: username,
       displayName: displayName || username,
@@ -164,12 +180,49 @@ class App extends Component {
       this.setState({
         profile: {
           ...this.state.profile,
-          displayName: results.data.displayName
+          displayName: results.data.displayName,
+          isLoading: false
         }
       })
     })
     .catch( (err) => {
       console.log(err);
+      this.setState({
+        profile: { ...this.state.profile, isLoading: false }
+      })
+    })
+  }
+
+  handleLogout() {
+    axios.get(config.BACKEND_URL + "auth/logout")
+    .then( (results) => {
+      this.setState({
+        profile: { ...this.state.profile, displayName: null }
+      })
+    })
+    .catch( (err) => {
+      console.log(err);
+    })
+  }
+
+  handleAddWord(word) {
+    const { list } = this.state;
+    if( list.words.find( (wordElement) => wordElement===word) ) return;
+    const newWords = [ ...list.words, word]
+    this.setState({ list: {...list, words: newWords} }, () => this.syncWords() );
+  }
+
+  syncWords() {
+    const { list } = this.state;
+
+    axios.post(config.BACKEND_URL + "words/sync", {
+      words: list.words
+    })
+    .then( (results) => {
+      console.log("Wordlist sync'ed");
+    })
+    .catch( (err) => {
+      console.log("Unable to sync wordlist", err);
     })
   }
 
@@ -197,10 +250,18 @@ class App extends Component {
                   <WordList {...list} assignActiveWord={this.assignActiveWord} getList={this.getList} {...props} /> 
                 }/>
                 <Route path="/search" render={ (props) => 
-                  <SearchWord {...search} saveSearchInput={this.saveSearchInput} onSearch={this.getWordData} {...props} /> 
+                  <SearchWord {...search}  {...props}
+                  saveSearchInput={this.saveSearchInput} 
+                  handleAddWord={this.handleAddWord}
+                  onSearch={this.getWordData} /> 
                 }/>
                 <Route path="/login" render={ (props) => 
                   <Login handleLogin={this.handleLogin} handleRegister={this.handleRegister} {...profile} {...props} /> 
+                }/>
+                <Route path="/logout" render={ (props) => {
+                  this.handleLogout();
+                  return <Redirect to="/" />
+                }                
                 }/>
               </div>
             </div>

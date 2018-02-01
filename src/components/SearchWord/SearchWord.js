@@ -32,12 +32,18 @@ export default class SearchWord extends Component {
 
     handleSearch() {
         const { searchInput } = this.state;
-        const { onSearch } = this.props;
+        const { onSearch, saveSearchInput } = this.props;
         onSearch(searchInput, 'search');
+        saveSearchInput(searchInput);
+    }
+
+    handleAddWord() {
+        const { handleAddWord, searchInput } = this.props;
+        handleAddWord(searchInput);
     }
 
     render() {
-        const { inflectionTable, isLoading } = this.props;
+        const { inflectionTable, isLoading, searchInput: currentSearch } = this.props;
         const { searchInput } = this.state;
 
         return (
@@ -50,13 +56,34 @@ export default class SearchWord extends Component {
                 handleInputChange: this.handleInputChange,
                 handleSearch: this.handleSearch
             }} />
-            <WordInfo inflectionTable={inflectionTable} />
+            <AddButton 
+            handleAddWord={this.handleAddWord.bind(this)}
+            isLoading={isLoading}
+            showing={!!inflectionTable.length}/>
+            <WordInfo currentSearch={currentSearch} inflectionTable={inflectionTable} />
         </div>
         )
     }
 }
 
+class AddButton extends Component {
+    render() {
+        const { showing, handleAddWord, isLoading } = this.props;
+        if(!showing) return null;
 
+        return (
+            <div id="add-button-container" className="columns">
+                <div className="column is-half is-offset-one-quarter has-text-centered">
+                    <button 
+                    disabled={isLoading}
+                    className="button is-success" 
+                    onClick={handleAddWord}
+                    >Add this word</button>
+                </div>
+            </div>
+        )
+    }
+}
 
 class SearchInput extends Component {
 

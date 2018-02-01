@@ -1,12 +1,16 @@
 #search-results-container {
-    display: flex;
-    align-content: center;
-    justify-content: center;
-
+ 
     margin-top: 1rem;
 }
 
 
 .word-info-row-dark {
     background-color: #eee;
+}
+
+
+#table-info-container {
+    /* display: flex;
+    align-content: center;
+    justify-content: center;    */
 }

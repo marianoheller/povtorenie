@@ -5,13 +5,13 @@ import './Login.css';
 
 export default class Auth extends Component {
     render() {
-        const { displayName, handleLogin, handleRegister } = this.props;
+        const { displayName, isLoading, handleLogin, handleRegister } = this.props;
         if( displayName) return <Redirect to="/" />
 
         return (
         <div id="auth-container">
-            <LoginForm handleLogin={handleLogin} />
-            <RegisterForm handleRegister={handleRegister}/>
+            <LoginForm handleLogin={handleLogin} isLoading={isLoading} />
+            <RegisterForm handleRegister={handleRegister} isLoading={isLoading}/>
         </div>
         )
     }
@@ -51,6 +51,7 @@ class LoginForm extends Component {
 
     render() {
         const { username , password } = this.state;
+        const { isLoading } = this.props;
 
         return (
         <div id="login-container">
@@ -95,7 +96,13 @@ class LoginForm extends Component {
                     </div>
                     <div className="field">
                         <p className="control is-pulled-right">
-                            <button className="button is-success" onClick={this.handleSubmit.bind(this)}>
+                            <button 
+                            className="button is-success" 
+                            disabled={!!isLoading} 
+                            onClick={this.handleSubmit.bind(this)}>
+                                { isLoading &&
+                                <i className="fa fa-spinner fa-pulse"></i>
+                                }
                                 Login
                             </button>
                         </p>
@@ -143,6 +150,7 @@ class RegisterForm extends Component {
 
     render() {
         const { displayName, username, password } = this.state;
+        const { isLoading } = this.props;
 
         return (
         <div id="register-container" >
@@ -203,7 +211,13 @@ class RegisterForm extends Component {
                     </div>
                     <div className="field">
                         <p className="control is-pulled-right">
-                            <button className="button is-success" onClick={this.handleSubmit.bind(this)}>
+                            <button 
+                            className="button is-success" 
+                            disabled={!!isLoading} 
+                            onClick={this.handleSubmit.bind(this)}>
+                                { isLoading &&
+                                <i className="fa fa-spinner fa-pulse"></i>
+                                }
                                 Register
                             </button>
                         </p>

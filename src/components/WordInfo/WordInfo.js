@@ -16,24 +16,37 @@ export default class WordInfo extends Component {
     }
     
     render() {
-        const { inflectionTable } = this.props;
+        const { inflectionTable, currentSearch } = this.props;
         if(!inflectionTable) return <div>Error! No inflection table prop</div>;
 
         return (
         <div id="search-results-container">
-            <table className="table is-narrow" id="inflection-table">
-                <tbody>
-                { inflectionTable.map( (row, rowNum) => (
-                <tr key={rowNum} className={`word-info-row ${this.isRowDark(row) ? "word-info-row-dark" : ""}`}>
-                    {row.map( (cell, cellNum) => (
-                    <td key={cellNum}>
-                        { this.isCellBold(cell) ? <b>{cell}</b> : cell }
-                    </td>
-                    ))}
-                </tr>
-                ))}
-                </tbody>
-            </table>
+
+            { !!inflectionTable.length && 
+            <div className="columns">
+                <div className="column is-12 has-text-centered">
+                    <p className="subtitle"><strong>{currentSearch}</strong></p>
+                </div>
+            </div>
+            }
+
+            <div className="columns" id="table-info-container">
+                <div className="column is-12">
+                    <table className="table is-narrow is-fullwidth" id="inflection-table">
+                        <tbody>
+                        { inflectionTable.map( (row, rowNum) => (
+                        <tr key={rowNum} className={`word-info-row ${this.isRowDark(row) ? "word-info-row-dark" : ""}`}>
+                            {row.map( (cell, cellNum) => (
+                            <td key={cellNum}>
+                                { this.isCellBold(cell) ? <b>{cell}</b> : cell }
+                            </td>
+                            ))}
+                        </tr>
+                        ))}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
         )
     }
