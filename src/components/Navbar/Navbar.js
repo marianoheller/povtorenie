@@ -5,26 +5,27 @@ import './Navbar.css';
 
 export default class NavBar extends Component {
 
+
     render() {
         const { displayName } = this.props;
 
         return (
-        <nav className="navbar" aria-label="main navigation">
+        <nav className="navbar is-fixed-top is-white" aria-label="main navigation">
             <div className="navbar-brand">
-                <a className="navbar-item" href="https://bulma.io">
+                <a className="navbar-item" href="/">
                     <img src="https://bulma.io/images/bulma-logo.png" alt="Bulma: a modern CSS framework based on Flexbox" width="112" height="28" />
                 </a>
 
-                <button className="button navbar-burger">
+                <button className="button navbar-burger" data-target="navMenu">
                     <span></span>
                     <span></span>
                     <span></span>
                 </button>
             </div>
 
-            <div className="navbar-menu">
+            <div className="navbar-menu" id="navMenu">
                 <div className="navbar-start">
-                    <NavLink className="navbar-item" activeClassName="is-active" to="/" >
+                    <NavLink className="navbar-item" activeClassName="is-active" to="/" exact>
                         <i className="fa fa-gavel fa-fw"></i>
                         Practice!
                     </NavLink>
@@ -55,4 +56,6 @@ export default class NavBar extends Component {
     }
 }
 
+
+  
 
