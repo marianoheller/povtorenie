@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom';
 import './Navbar.css';
+import logo from './povtorenie3.png';
+
 
 
 export default class NavBar extends Component {
@@ -13,7 +15,7 @@ export default class NavBar extends Component {
         <nav className="navbar is-fixed-top is-white" aria-label="main navigation">
             <div className="navbar-brand">
                 <a className="navbar-item" href="/">
-                    <img src="https://bulma.io/images/bulma-logo.png" alt="Bulma: a modern CSS framework based on Flexbox" width="112" height="28" />
+                    <img src={logo} alt="Bulma: a modern CSS framework based on Flexbox" width="112" height="28" />
                 </a>
 
                 <button className="button navbar-burger" data-target="navMenu">
