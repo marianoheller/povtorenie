@@ -30,8 +30,8 @@ export default class WordInfo extends Component {
             </div>
             }
 
-            <div className="columns" id="table-info-container">
-                <div className="column is-12">
+            <div className="columns">
+                <div className="column is-12"  id="table-info-container">
                     <table className="table is-narrow is-fullwidth" id="inflection-table">
                         <tbody>
                         { inflectionTable.map( (row, rowNum) => (

@@ -12,7 +12,7 @@ export default class NavBar extends Component {
         const { displayName } = this.props;
 
         return (
-        <nav className="navbar is-fixed-top is-white" aria-label="main navigation">
+        <nav className="navbar is-white" aria-label="main navigation">
             <div className="navbar-brand">
                 <a className="navbar-item" href="/">
                     <img src={logo} alt="Bulma: a modern CSS framework based on Flexbox" width="112" height="28" />
