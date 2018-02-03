@@ -273,11 +273,11 @@ class App extends Component {
     return (
       <div className="App">
         <Router basename="/povtorenie">
-          <div>
+          <div className="container">
             <Navbar {...profile} />
 
             <div className="columns" id="app-content-container">
-              <div className="column is-8 is-offset-2">
+              <div className="column is-8 is-offset-2 is-12-mobile">
                 <Route exact path="/" render={ (props) => 
                   <Review 
                   {...review}

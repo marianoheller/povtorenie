@@ -1,3 +1,11 @@
+html {
+  width: 100%;
+}
+
+#root {
+  width: 100%;
+}
+
 .App {
   text-align: center;
 }
@@ -5,3 +13,11 @@
 #app-content-container {
   margin-top: 1rem;
 }
+
+@media (max-width: 768px) { 
+  
+  #app-content-container {
+    margin-left: unset !important;
+    margin-right: unset !important;
+  }
+ }
