@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import {
   BrowserRouter as Router,
-  Route
+  Route,
+  Switch,
+  Redirect
 } from 'react-router-dom'
 
 import scraper from './modules/scraper';
@@ -18,7 +20,6 @@ import config from './config';
 import 'bulma/css/bulma.css';
 import 'font-awesome/css/font-awesome.css'
 import './App.css';
-import Redirect from 'react-router-dom/Redirect';
 
 
 class App extends Component {
@@ -278,34 +279,37 @@ class App extends Component {
 
             <div className="columns" id="app-content-container">
               <div className="column is-8 is-offset-2 is-12-mobile">
-                <Route exact path="/" render={ (props) => 
-                  <Review 
-                  {...review}
-                  {...props}  
-                  list={list}
-                  getList={this.getList} 
-                  getWordData={this.getWordData} 
-                  assignRandomActiveWord={this.assignRandomActiveWord}
-                  /> 
-                }/>
-                <Route path="/list" render={ (props) => 
-                  <WordList {...list} assignActiveWord={this.assignActiveWord} syncWords={this.syncWords} {...props} /> 
-                }/>
-                <Route path="/search" render={ (props) => 
-                  <SearchWord {...search}  {...props}
-                  list={list}
-                  saveSearchInput={this.saveSearchInput} 
-                  handleAddWord={this.handleAddWord}
-                  onSearch={this.getWordData} /> 
-                }/>
-                <Route path="/login" render={ (props) => 
-                  <Login handleLogin={this.handleLogin} handleRegister={this.handleRegister} {...profile} {...props} /> 
-                }/>
-                <Route path="/logout" render={ (props) => {
-                  this.handleLogout();
-                  return <Redirect to="/" />
-                }
-                }/>
+                <Switch>
+                  <Route exact path="/" render={ (props) => 
+                    <Review 
+                    {...review}
+                    {...props}  
+                    list={list}
+                    getList={this.getList} 
+                    getWordData={this.getWordData} 
+                    assignRandomActiveWord={this.assignRandomActiveWord}
+                    /> 
+                  }/>
+                  <Route path="/list" render={ (props) => 
+                    <WordList {...list} assignActiveWord={this.assignActiveWord} syncWords={this.syncWords} {...props} /> 
+                  }/>
+                  <Route path="/search" render={ (props) => 
+                    <SearchWord {...search}  {...props}
+                    list={list}
+                    saveSearchInput={this.saveSearchInput} 
+                    handleAddWord={this.handleAddWord}
+                    onSearch={this.getWordData} /> 
+                  }/>
+                  <Route path="/login" render={ (props) => 
+                    <Login handleLogin={this.handleLogin} handleRegister={this.handleRegister} {...profile} {...props} /> 
+                  }/>
+                  <Route path="/logout" render={ (props) => {
+                    this.handleLogout();
+                    return <Redirect to="/" />
+                  }
+                  }/>
+                  <Route render={() => <Redirect to="/"/>}/>
+                </Switch>
               </div>
             </div>
           </div>
