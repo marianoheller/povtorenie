@@ -273,7 +273,7 @@ class App extends Component {
     return (
       <div className="App">
         <Router basename="/povtorenie">
-          <div className="container">
+          <div className="container is-fluid">
             <Navbar {...profile} />
 
             <div className="columns" id="app-content-container">
