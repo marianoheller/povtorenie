@@ -6,6 +6,7 @@ import {
   Switch,
   Redirect
 } from 'react-router-dom'
+import translate from 'translate';
 
 import scraper from './modules/scraper';
 import parser from './modules/parser';
@@ -50,7 +51,7 @@ class App extends Component {
     }
 
     this.saveSearchInput = this.saveSearchInput.bind(this);
-    this.getWordData = this.getWordData.bind(this);
+    this.getFullDataInfo = this.getFullDataInfo.bind(this);
     /* this.handleSearch = debounce( this.handleSearch.bind(this), 500); */
     this.getList = this.getList.bind(this);
     this.assignActiveWord = this.assignActiveWord.bind(this);
@@ -121,7 +122,7 @@ class App extends Component {
         activeWord: words[newIndex]
       }
     }, () => {
-      this.getWordData(words[newIndex], 'review')
+      this.getFullDataInfo(words[newIndex], 'review')
     } );
     
   }
@@ -153,17 +154,13 @@ class App extends Component {
     })
   }
 
-  getWordData(word, dest) {
+  getFullDataInfo(word, dest) {
     if( !/[а-яА-ЯЁё]/.test(word) ) return;
     this.setState({ [dest]: {...this.state[dest], isLoading: true}})
 
-    axios.get( config.REPEATER_URL + config.BASE_URL + word)
-    //Get useful data
-    .then( (results) => scraper(results.data))
-    //Transpose table
-    .then( (inflectionTable) => parser(inflectionTable) )
-    //Assign to state
-    .then( (newInflectionTable) => {
+    Promise.all([ this.getWordTable(word), this.getWordTranslation(word) ])
+    .then( ([newInflectionTable, newTranslation]) => {
+      console.log("NEW TRANSLATION", newTranslation);
       this.setState({ [dest]: {
         ...this.state[dest],
         isLoading: false,
@@ -174,6 +171,19 @@ class App extends Component {
       this.setState({[dest]: {...this.state[dest], isLoading: false}})
       console.log("ERROR", err);
     })
+  }
+
+  getWordTranslation(word) {
+    return axios.get( config.BACKEND_URL + '/translate?word=' + word)
+    .then( (results) => results.data.translation )
+    .catch(console.log);
+  }
+
+  getWordTable(word) {
+    return axios.get( config.REPEATER_URL + config.BASE_URL + word)
+    .then( (results) => scraper(results.data))
+    .then( (inflectionTable) => parser(inflectionTable) )
+    .catch(console.log) 
   }
 
   handleLogin(username, password) {
@@ -286,7 +296,7 @@ class App extends Component {
                     {...props}  
                     list={list}
                     getList={this.getList} 
-                    getWordData={this.getWordData} 
+                    getWordData={this.getFullDataInfo} 
                     assignRandomActiveWord={this.assignRandomActiveWord}
                     /> 
                   }/>
@@ -298,7 +308,7 @@ class App extends Component {
                     list={list}
                     saveSearchInput={this.saveSearchInput} 
                     handleAddWord={this.handleAddWord}
-                    onSearch={this.getWordData} /> 
+                    onSearch={this.getFullDataInfo} /> 
                   }/>
                   <Route path="/login" render={ (props) => 
                     <Login handleLogin={this.handleLogin} handleRegister={this.handleRegister} {...profile} {...props} /> 

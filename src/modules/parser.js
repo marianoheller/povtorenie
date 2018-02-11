@@ -1,5 +1,6 @@
 
 export default function parser(inflectionTable) {
+    
     //Transpose table
     inflectionTable = inflectionTable[0].map((row, i) => inflectionTable.map(col => col[i]));
 
