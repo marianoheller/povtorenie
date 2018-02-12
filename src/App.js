@@ -177,8 +177,8 @@ class App extends Component {
         isLoading: false,
         info: {
           ...this.state[dest].info,
-          inflectionTable: newInflectionTable,
-          translation: newTranslation
+          inflectionTable: newInflectionTable || [],
+          translation: newTranslation || null
         }
       }});
     })
