@@ -174,7 +174,7 @@ class App extends Component {
   }
 
   getWordTranslation(word) {
-    return axios.get( config.BACKEND_URL + '/translate?word=' + word)
+    return axios.get( config.BACKEND_URL + 'words/translate?word=' + word)
     .then( (results) => results.data.translation )
     .catch(console.log);
   }
