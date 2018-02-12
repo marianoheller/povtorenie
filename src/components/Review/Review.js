@@ -57,7 +57,7 @@ export default class Review extends Component {
                 isLoading={isLoading}
                 listIsLoading={list.isLoading}
                 cantWords={list.words ? list.words.length : 0} />
-                <WordInfo inflectionTable={info.inflectionTable} />
+                <WordInfo wordInfo={info} />
             </div>
         )
     }

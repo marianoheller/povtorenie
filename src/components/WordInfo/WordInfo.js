@@ -16,19 +16,26 @@ export default class WordInfo extends Component {
     }
     
     render() {
-        const { inflectionTable, currentSearch } = this.props;
-        if(!inflectionTable) return <div>Error! No inflection table prop</div>;
+        const { wordInfo, currentSearch } = this.props;
+        const { translation, inflectionTable } = wordInfo;
+        if(!inflectionTable || !translation) return <div>Error! not enough params</div>;
 
         return (
         <div id="search-results-container">
 
-            { !!inflectionTable.length && 
+            { Boolean(currentSearch) && 
             <div className="columns">
                 <div className="column is-12 has-text-centered">
                     <p className="subtitle"><strong>{currentSearch}</strong></p>
                 </div>
             </div>
             }
+
+            <div className="columns">
+                <div className="column is-12">
+                    <p className="subtitle">Meaning: <strong>{translation}</strong></p>
+                </div>
+            </div>
 
             <div className="columns">
                 <div className="column is-12"  id="table-info-container">

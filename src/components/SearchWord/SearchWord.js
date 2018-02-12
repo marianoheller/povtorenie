@@ -61,7 +61,7 @@ export default class SearchWord extends Component {
             isLoading={isLoading}
             isAlreadyListed={!!list.words.find( (word) => word===currentSearch )}
             showing={!!info.inflectionTable.length}/>
-            <WordInfo currentSearch={currentSearch} inflectionTable={info.inflectionTable} />
+            <WordInfo currentSearch={currentSearch} wordInfo={info} />
         </div>
         )
     }
