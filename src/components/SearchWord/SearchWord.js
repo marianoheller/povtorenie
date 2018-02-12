@@ -43,7 +43,7 @@ export default class SearchWord extends Component {
     }
 
     render() {
-        const { inflectionTable, isLoading, searchInput: currentSearch, list } = this.props;
+        const { info, isLoading, searchInput: currentSearch, list } = this.props;
         const { searchInput } = this.state;
 
         return (
@@ -60,8 +60,8 @@ export default class SearchWord extends Component {
             handleAddWord={this.handleAddWord.bind(this)}
             isLoading={isLoading}
             isAlreadyListed={!!list.words.find( (word) => word===currentSearch )}
-            showing={!!inflectionTable.length}/>
-            <WordInfo currentSearch={currentSearch} inflectionTable={inflectionTable} />
+            showing={!!info.inflectionTable.length}/>
+            <WordInfo currentSearch={currentSearch} inflectionTable={info.inflectionTable} />
         </div>
         )
     }

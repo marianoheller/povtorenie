@@ -32,7 +32,7 @@ export default class Review extends Component {
     }
 
     render() {
-        const { inflectionTable, activeWord, isLoading, list } = this.props;
+        const { info, activeWord, isLoading, list } = this.props;
 
         return (
             <div id="review-container">
@@ -57,7 +57,7 @@ export default class Review extends Component {
                 isLoading={isLoading}
                 listIsLoading={list.isLoading}
                 cantWords={list.words ? list.words.length : 0} />
-                <WordInfo inflectionTable={inflectionTable} />
+                <WordInfo inflectionTable={info.inflectionTable} />
             </div>
         )
     }

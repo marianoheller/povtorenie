@@ -36,12 +36,18 @@ class App extends Component {
       review: {
         activeWord: null,
         isLoading: false,
-        inflectionTable: []
+        info: {
+          inflectionTable: [],
+          translation: null
+        }
       },
       search: {
         searchInput: "",
         isLoading: false,
-        inflectionTable: []
+        info: {
+          inflectionTable: [],
+          translation: null
+        }
       },
       list: {
         isDefault: true,
@@ -160,11 +166,14 @@ class App extends Component {
 
     Promise.all([ this.getWordTable(word), this.getWordTranslation(word) ])
     .then( ([newInflectionTable, newTranslation]) => {
-      console.log("NEW TRANSLATION", newTranslation);
       this.setState({ [dest]: {
         ...this.state[dest],
         isLoading: false,
-        inflectionTable: newInflectionTable
+        info: {
+          ...this.state[dest].info,
+          inflectionTable: newInflectionTable,
+          translation: newTranslation
+        }
       }});
     })
     .catch( (err) => {

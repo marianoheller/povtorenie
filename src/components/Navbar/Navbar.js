@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom';
 import './Navbar.css';
-import logo from './povtorenie3.png';
+import logo from './povtorenie2.png';
 
 
 
