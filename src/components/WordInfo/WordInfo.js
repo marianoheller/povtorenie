@@ -18,7 +18,7 @@ export default class WordInfo extends Component {
     render() {
         const { wordInfo, currentSearch } = this.props;
         const { translation, inflectionTable } = wordInfo;
-        if(!inflectionTable || !translation) return <div>Error! not enough params</div>;
+        if(!inflectionTable || !translation) return null;
 
         return (
         <div id="search-results-container">

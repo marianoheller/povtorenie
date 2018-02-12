@@ -1,4 +1,7 @@
 
+.navbar-brand > .navbar-item:hover {
+    background-color: inherit !important;
+}
 
 .navbar-item > .fa {
     color: hsl(171, 100%, 41%);

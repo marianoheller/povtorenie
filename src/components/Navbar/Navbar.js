@@ -14,9 +14,12 @@ export default class NavBar extends Component {
         return (
         <nav className="navbar is-white" aria-label="main navigation">
             <div className="navbar-brand">
-                <a className="navbar-item" href="/">
+                <NavLink className="navbar-item" activeClassName="" to="/" exact>
                     <img src={logo} alt="Bulma: a modern CSS framework based on Flexbox" width="112" height="28" />
-                </a>
+                </NavLink>
+                {/* <a className="navbar-item" href="/">
+                    <img src={logo} alt="Bulma: a modern CSS framework based on Flexbox" width="112" height="28" />
+                </a> */}
 
                 <button className="button navbar-burger" data-target="navMenu">
                     <span></span>
