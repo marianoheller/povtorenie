@@ -5,8 +5,7 @@ import {
   Route,
   Switch,
   Redirect
-} from 'react-router-dom'
-import translate from 'translate';
+} from 'react-router-dom';
 
 import scraper from './modules/scraper';
 import parser from './modules/parser';
