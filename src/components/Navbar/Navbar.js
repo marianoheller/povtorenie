@@ -46,7 +46,10 @@ export default class NavBar extends Component {
 
                 <div className="navbar-end">
                     {   displayName ?
-                    <NavLink className="navbar-item" to="/logout" >{displayName}, logout</NavLink>
+                    <NavLink className="navbar-item" to="/logout" >
+                        <i className="fa fa-sign-out fa-fw"></i>
+                        {displayName}, logout
+                    </NavLink>
                     :
                     <NavLink className="navbar-item" activeClassName="is-active" to="/login" >
                         <i className="fa fa-sign-in fa-fw"></i>
