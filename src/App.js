@@ -21,39 +21,41 @@ import 'bulma/css/bulma.css';
 import 'font-awesome/css/font-awesome.css'
 import './App.css';
 
+const DEFAULT_STATE= {
+  profile: {
+    isLoading: false,
+    displayName: null
+  },
+  review: {
+    activeWord: null,
+    isLoading: false,
+    info: {
+      inflectionTable: [],
+      translation: null
+    }
+  },
+  search: {
+    searchInput: "",
+    isLoading: false,
+    info: {
+      inflectionTable: [],
+      translation: null
+    }
+  },
+  list: {
+    isDefault: true,
+    isLoading: false,
+    words: config.DEFAULT_WORD_LIST
+  }
+}
+
 
 class App extends Component {
 
   constructor(props) {
     super(props);
 
-    this.state = {
-      profile: {
-        isLoading: false,
-        displayName: null
-      },
-      review: {
-        activeWord: null,
-        isLoading: false,
-        info: {
-          inflectionTable: [],
-          translation: null
-        }
-      },
-      search: {
-        searchInput: "",
-        isLoading: false,
-        info: {
-          inflectionTable: [],
-          translation: null
-        }
-      },
-      list: {
-        isDefault: true,
-        isLoading: false,
-        words: config.DEFAULT_WORD_LIST
-      }
-    }
+    this.state = DEFAULT_STATE;
 
     this.saveSearchInput = this.saveSearchInput.bind(this);
     this.getFullDataInfo = this.getFullDataInfo.bind(this);
@@ -74,38 +76,7 @@ class App extends Component {
   }
 
   resetState(cb) {
-    this.setState({
-      ...this.state,
-      profile: {
-        ...this.state.profile,
-        isLoading: false,
-        displayName: null
-      },
-      review: {
-        ...this.state.review,
-        activeWord: null,
-        isLoading: false,
-        info: {
-          inflectionTable: [],
-          translation: null
-        }
-      },
-      search: {
-        ...this.state.search,
-        searchInput: "",
-        isLoading: false,
-        info: {
-          inflectionTable: [],
-          translation: null
-        }
-      },
-      list: {
-        ...this.state.list,
-        isDefault: true,
-        isLoading: false,
-        words: config.DEFAULT_WORD_LIST
-      }
-    }, () => {
+    this.setState(DEFAULT_STATE, () => {
       if(cb) cb();
     })
   }
