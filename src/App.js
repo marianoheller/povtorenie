@@ -194,6 +194,12 @@ class App extends Component {
     .catch(console.log);
   }
 
+  getWordPronunciation(word) {
+    return axios.get( config.BACKEND_URL + 'utils/sound?word=' + word)
+    .then( (results) => results.data.sound )
+    .catch(console.log);
+  }
+
   getWordTable(word) {
     return axios.get( config.REPEATER_URL + config.BASE_URL + word)
     .then( (results) => scraper(results.data))
